@@ -23,6 +23,7 @@ Input: coins = [1], amount = 0
 Output: 0
 */
 
+// Time: O(amount * denomination count of coins) | Space: O(amount) for the memoization table
 var coinChange = function(coins, amount) {
     const MAX = Number.MAX_SAFE_INTEGER;
     const dp = new Array(amount + 1).fill(MAX);
