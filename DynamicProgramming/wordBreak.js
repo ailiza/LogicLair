@@ -26,26 +26,16 @@ Output: false
 */
 
 var wordBreak = function(s, wordDict) {
-    if (!wordDict) return false;
-    
-    //create dp table with the length of s elements and set the first element as true. 
-    //when s(i) is a word that can be formed from wordDict, store it as true in the table
-    const dp = new Array(s.length + 1);
-    dp[0] = true;
-    
-    //i is for the s index
-    for (let i = 1; i <= s.length; i++) {
-        for (let j = 0; j < i; j++) { //j is for the dp index
-            if (dp[i]) break; //don't need to set dp if it's already true
-            
-            let sub = s.substring(i, j); //get the substring between i and up to j
-            let index = wordDict.indexOf(sub); //find if your sub is in wordDict
-            if (dp[j] && index >= 0) { //prev (dp[j]) + current substring (s.substring(i,j))
-                dp[i] = true;
-                break;
+    const dp = new Array(s.length + 1).fill(false);
+    dp[s.length] = true; //this is our base case
+
+    for (let i = s.length - 1; i >= 0; i--) {
+        for (const word of wordDict) {
+            if (i + word.length <= s.length && s.substring(i, i + word.length) === word) {
+                dp[i] = dp[i + word.length];
             }
+            if (dp[i]) break;
         }
     }
-    
-    return Boolean(dp[s.length]); //undefined will evaluate to false
+    return dp[0];
 };
