@@ -26,7 +26,8 @@ To take course 1 you should have finished course 0, and to take course 0 you sho
 
 // Topological Sort is good for non cyclic graphs where order of the path matters
 // for this example, you have to take a bunch of prereqs in order before taking Math 400 level classes
-// Time:O(m+n) | Space: O(m+n) m for edges and n elements for the indegree array
+// Time:O(m+n) m for edges and n elements for the indegree array 
+// Space: O(m+n) m for indegree array and n for queue
 
 var canFinish = function(numCourses, prerequisites) {
     const graph = new Map(); //prereq: [course1,course2]
@@ -68,7 +69,7 @@ var canFinish = function(numCourses, prerequisites) {
 };
 
 
-
+// DFS approach
 var canFinish = function(numCourses, prerequisites) {
     const preMap = {};
     const visited = {};

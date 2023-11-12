@@ -13,6 +13,85 @@ If this claim is incorrect, and the given arrangement of string in words cannot 
 Otherwise, return a string of the unique letters in the new alien language sorted in lexicographically increasing order by the new language's rules. If there are multiple solutions, return any of them.
 */
 
+// Video on Topological Sort: https://leetcode.com/explore/learn/card/graph/623/kahns-algorithm-for-topological-sorting/3886/
+// Solution Approach - Topological Sort
+// Time:
+// Space
+var alienOrder = function(words) {
+  const graph = new Map(); // char: Set
+  const indegree = new Map(); // char: number of indegrees
+
+  //set up graph and indegree to have char as the key
+  for (const word of words) {
+      for (const char of word) {
+          if (!graph.has(char)) {
+              graph.set(char, new Set());
+          }
+
+          if (!indegree.has(char)) {
+              indegree.set(char, 0);
+          }
+      }
+  }
+
+  // use basic dictionary knowledge to find the relationships and fill in graph with edges
+  // and increase the count of indegree
+  for (let i = 1; i < words.length; i++) {
+      const w1 = words[i - 1];
+      const w2 = words[i];
+      const minLength = Math.min(w1.length, w2.length);
+
+      if (w2.length < w1.length && w1.startsWith(w2)) {
+          return "";
+      }
+
+      for (let j = 0; j < minLength; j++) {
+          const firstLetter = w1[j];
+          const secondLetter = w2[j];
+          if (firstLetter !== secondLetter) {
+              if (!graph.get(firstLetter).has(secondLetter)) { //check to see if firstLetter.has(secondLetter) is there or not
+                  graph.get(firstLetter).add(secondLetter);
+                  indegree.set(secondLetter, indegree.get(secondLetter) + 1);
+              }
+              break;
+          }
+      }
+  }
+
+  //create a queue to find all the start points where a characters' indegree === 0
+  const queue = [];
+
+  for (const [char, numOfIndegrees] of indegree) {
+      if (numOfIndegrees === 0) {
+          queue.push(char);
+      }
+  }
+
+  //create a result which keeps the characters visited in a unidirectional way
+  const result = [];
+
+  while (queue.length) {
+      const currChar = queue.shift();
+
+      // look at neighbors
+      for (const nei of graph.get(currChar)) {
+          const val = indegree.get(nei) - 1;
+          indegree.set(nei, val);
+
+          if (val === 0) {
+              queue.push(nei);
+          }
+      }
+      result.push(currChar);
+  }
+
+  return result.length === indegree.size ? result.join("") : "";
+};
+
+
+
+
+//dfs
 var alienOrder = function(words) {
     // use adjacency list to map every single char to a Set -> char: Set {char, char,...}
     // value Set indicates that these chars come after key char lexicographically
