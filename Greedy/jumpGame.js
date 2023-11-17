@@ -21,3 +21,34 @@ var canJump = function(nums) {
 
     return goal === 0;
 };
+
+// DP T & S O(n)
+var canJump = function(nums) {
+    if (nums.length === 1 && nums[0] === 0) return true;
+
+    const dp = new Array(nums.length + 1).fill(false);
+    dp[nums.length] = true;
+    
+    const length = nums.length;
+
+    for (let i = length - 1; i >= 0; i--) {
+        let possibleDistance = nums[i];
+    
+        if (possibleDistance === 0) {
+            dp[i] = false; 
+            continue;
+        } else { //will this reach the finishline? and will check every element in between reach to the end
+            if (i + possibleDistance >= length - 1) { //gets to the finish line
+                dp[i] = true;
+            }
+            for (let j = i; j <= i + possibleDistance; j++) {
+                if (dp[j] === true) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    return dp[0];
+};
