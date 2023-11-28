@@ -11,19 +11,6 @@ Time: O(n) | Space: O(1)
 */
 
 var canJump = function(nums) {
-    let goal = nums.length - 1;
-
-    for (let i = nums.length - 1; i >= 0; i--) {
-        if (i + nums[i] >= goal) {//where we are plus the max length value, can it reach the goal?
-            goal = i; //if it's true, move the goal post closer to 0th index
-        }
-    }
-
-    return goal === 0;
-};
-
-// DP T & S O(n)
-var canJump = function(nums) {
     if (nums.length === 1 && nums[0] === 0) return true;
 
     const dp = new Array(nums.length).fill(false)
