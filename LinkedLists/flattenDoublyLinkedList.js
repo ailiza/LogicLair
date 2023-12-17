@@ -41,6 +41,35 @@ var flatten = function(head) {
     
     return head;
 };
+
+
+// DFS
+var flatten = function(head) {
+    if (!head) return head;
+
+    function traverse(curr) {
+        if (!curr.next && !curr.child) return curr;
+
+        if (curr.child) {
+            const nextNode = curr.next;
+            curr.next = curr.child;
+            curr.next.prev = curr;
+            curr.child = null;
+
+            if (nextNode) {
+                const tailNode = traverse(curr.next)
+                tailNode.next = nextNode;
+                nextNode.prev = tailNode;
+            }
+        }
+        return traverse(curr.next)
+    }
+
+    traverse(head);
+    return head;
+};
+
+
 // Prior code
 // const flatten = function (head, temp) {
 //   let node = head;

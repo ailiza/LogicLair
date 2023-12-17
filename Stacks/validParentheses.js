@@ -66,3 +66,24 @@ function validParens(s) {
   
     return !stack.length;
   }
+
+  //Same as above but variable names are more clear
+  var isValid = function(s) {
+    const BRACKETS = {
+        "}":"{",
+        "]":"[",
+        ")":"("
+    }
+    const stack = [];
+    for (let i = 0; i < s.length; i++) {
+        let el = s[i]
+        let isClosed = BRACKETS[el]
+
+        if (isClosed) {
+            if (stack.pop() !== isClosed) return false;
+        } else {
+            stack.push(el)
+        }
+    }
+    return !stack.length;    
+};
