@@ -25,55 +25,56 @@ Since the largest window of s only has one 'a', return empty string.
 */
 
 var minWindow = function(s, t) {
-    const needMap = new Map();
+    const tMap = new Map();
     for (const char of t) {
-        needMap.set(char, needMap.get(char) + 1 || 1);
+        tMap.set(char, (tMap.get(char) || 0) + 1);
     }
-    const needCount = needMap.size;
+    const tCount = tMap.size;
     
-    const haveMap = new Map();
-    let haveCount = 0;
-    let minWindowString = "";
+    const sMap = new Map();
+    let sCount = 0;
+    
+    let mss = "";
     let start = 0;
     
     for (let end = 0; end < s.length; end++) {
         let char = s[end];
         
         //mark as visited
-        if (needMap.has(char)) {
-            haveMap.set(char, haveMap.get(char) + 1 || 1);
+        if (tMap.has(char)) {
+            sMap.set(char, (sMap.get(char) || 0) + 1);
         }
         
         //increment count
-        if (haveMap.has(char) && needMap.get(char) === haveMap.get(char)) {
-            haveCount++;
+        if (sMap.has(char) && tMap.get(char) === sMap.get(char)) {
+            sCount++;
         }
         
         
-        //while loop to shrink the window
-        while (haveCount === needCount) {
-            if (!minWindowString || end - start + 1 < minWindowString.length) {
-                minWindowString = s.slice(start, end + 1);
+        //while loop only when the sCount and tCount are the same
+        while (sCount === tCount) {
+            if (!mss || end - start + 1 < mss.length) {
+                mss = s.slice(start, end + 1);
             }
             
-            //start shrinking
-            let sChar = s[start];
-            if (needMap.get(sChar) > haveMap.get(sChar) - 1) {
-                haveCount--;
+            //if what you get is greater that what you're going to subtract
+            let sEl = s[start];
+            let tMapVal = tMap.get(sEl)
+            let sMapVal = sMap.get(sEl)
+
+            if (tMapVal > sMapVal - 1) {
+                sCount--;
             }
-            
-            //haveMap.get(startChar) > 1 ? haveMap.set(startChar, haveMap.get(startChar) - 1) : haveMap.delete(startChar);
-            if (haveMap.get(sChar) > 1) {
-                haveMap.set(sChar, haveMap.get(sChar) - 1);
+
+            if (sMapVal === 1) {
+                sMap.delete(sEl)
             } else {
-                haveMap.delete(sChar);
+                sMap.set(sEl, sMapVal - 1);
             }
-            
+        
             start++;
         }
     }
     
-    
-    
-    return minWindowString;
+    return mss;
 };

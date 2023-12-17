@@ -21,41 +21,39 @@ Output: [[4],[9,5],[3,0,1],[8,2],[7]]
 
 // Using a queue and a map to keep track of the x axis (columns) and the node values
 var verticalOrder = function(root) {
-    if (!root) {
-        return [];
-    }
-    
-    const result = [];
-    const map = {}; //level:node.val
-    
-    let minimumX = Infinity;
-    let maximumX = -Infinity;
-    
-    let queue = [[root, 0]];
-    
+    if (!root) return [];
+    let colMap = new Map(); // column: [..nodes in that column]
+    let queue = [[root, 0]]
+    let minX = Infinity;
+    let maxX = -Infinity;
+
     while (queue.length) {
-        //shift from the beginning
-        let [currNode, currX] = queue.shift(); 
+        let [currNode, currCol] = queue.shift();
         
-        //update min and max
-        minimumX = Math.min(minimumX, currX);
-        maximumX = Math.max(maximumX, currX);
-        
-        //store it in our map
-        if (!map[currX]) map[currX] = [];
-        map[currX].push(currNode.val);
-        
-        
-        //add children to the queue
-        if (currNode.left) queue.push([currNode.left, currX - 1]);
-        if (currNode.right) queue.push([currNode.right, currX + 1]);
+        minX = Math.min(minX, currCol)
+        maxX = Math.max(maxX, currCol)
+
+        if (!colMap.has(currCol)) {
+            colMap.set(currCol, [currNode.val]);
+        } else {
+            colMap.get(currCol).push(currNode.val);
+        }
+
+        if (currNode.left) {
+            queue.push([currNode.left, currCol - 1]);
+        }
+
+        if (currNode.right) {
+            queue.push([currNode.right, currCol + 1]);
+        }
     }
-    
-    //iterate through the map obj
-    for (let i = minimumX; i <= maximumX; i++) {
-        result.push(map[i]);
+
+    const result = [];
+ 
+    for (let i = minX; i <= maxX; i++) {
+        let mapVal = colMap.get(i);
+        result.push(mapVal)
     }
-    
-    
+
     return result;
 };
