@@ -20,37 +20,35 @@ Input: s = "(1+(4+5+2)-3)+(6+8)"
 Output: 23
 */
 var calculate = function(s) {
-    let stack = [];
-    let op = 1;
-    let sum = 0
-    
-    for(let curr=0; curr<s.length; curr++){
-        if(s[curr] === ' ')continue;
+    let runningSum = 0;
+    let sign = 1;
+    const stack = []; //stack holds numbers and sign when you come across and open parenthesis
+
+    for (let i = 0; i < s.length; i++) {
+        const char = s[i];
         
-        
-        if( !isNaN( parseInt( s[curr] )) ){
-            let num = '';
-            while(curr<s.length && !isNaN( parseInt( s[curr] )) ){
-                num += s[curr];
-                curr++;
+        if (char === ' ') {
+            continue;
+        } else if (s[i] >= '0' && s[i] <= '9') {
+            let bigNum = char;
+            while (s[i+1] >= '0' && s[i+1] <= '9') {
+                bigNum += s[i + 1]
+                i++
             }
-            curr--;
-            sum += parseInt(num)*op
-            op = 1;
-            
-        }else if(s[curr] === '('){
-            stack.push(sum);
-            stack.push(op);
-            sum = 0;
-            op = 1
-            
-        }else if(s[curr] === ')'){
-            sum *= stack.pop();
-            sum += stack.pop();
-            
-        }else if(s[curr] === '-'){
-            op = -1
+            runningSum += Number(bigNum) * sign;
+            sign = 1;
+        } else if (char === '(') {
+            stack.push(runningSum);
+            stack.push(sign);
+            runningSum = 0;
+            sign = 1;
+        } else if(char === ')') {
+            runningSum *= stack.pop();
+            runningSum += stack.pop();
+        } else if (char === '-') {
+            sign = -1;
         }
     }
-    return sum
+
+    return runningSum;
 };
