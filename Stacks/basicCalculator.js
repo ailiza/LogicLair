@@ -20,6 +20,7 @@ Input: s = "(1+(4+5+2)-3)+(6+8)"
 Output: 23
 */
 var calculate = function(s) {
+    s.replace(/\s/g, '');
     let runningSum = 0;
     let sign = 1;
     const stack = []; //stack holds numbers and sign when you come across and open parenthesis
@@ -27,9 +28,7 @@ var calculate = function(s) {
     for (let i = 0; i < s.length; i++) {
         const char = s[i];
         
-        if (char === ' ') {
-            continue;
-        } else if (s[i] >= '0' && s[i] <= '9') {
+        if (char >= '0' && char <= '9') {
             let bigNum = char;
             while (s[i+1] >= '0' && s[i+1] <= '9') {
                 bigNum += s[i + 1]

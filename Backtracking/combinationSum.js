@@ -53,6 +53,31 @@ If target T = 9, we have 10 possible combinations:
 10^(9/3) = 30
 */
 
+// Backtracking but do the computation the same time that you're adding and removing from tempArr so you don't need to do a .reduce to compute the sum of the array
+var combinationSum = function(candidates, target) {
+    const result = [];
+    function explore(tempArr, idx, currCount) {
+        if (currCount > target) return;
+        if (currCount === target) {
+            result.push(tempArr)
+            return;
+        }
+
+        for (let i = idx; i < candidates.length; i++) {
+            const el = candidates[i]
+            tempArr.push(el)
+            currCount += el
+            explore([...tempArr], i, currCount)
+            currCount -= el
+            tempArr.pop()
+            
+        }
+    }
+    explore([], 0, 0)
+    return result;
+}
+
+
 //alternative way to write it using backtracking
 var combinationSum = function(candidates, target) {
     const result = [];

@@ -17,57 +17,53 @@ Time: O(n) | Space: O(n)
 */
 
 var flatten = function(head) {
-    if (!head) return;
-    
-    const stack = [head];
-    let p1;
-    
+    if (head === null || head === undefined) return null;
+    const stack = [head]; //hold what to process next
+    let prev = null;
+
     while (stack.length) {
-        const curr = stack.pop();
-        
-        if (!p1) {
-            p1 = curr;
-        } else {
-            //rewire
-            p1.next = curr;
-            curr.prev = p1;
-            p1 = curr;
+        let curr = stack.pop();
+        if (prev === null) {
+            prev = curr;
+        } else { //rewire
+            prev.next = curr;
+            curr.prev = prev;
+            prev = curr;
         }
-        
         if (curr.next) stack.push(curr.next);
-        if (curr.child) stack.push(curr.child);
+        if (curr.child) stack.push(curr.child)
         curr.child = null;
     }
-    
+
     return head;
 };
 
 
 // DFS
-var flatten = function(head) {
-    if (!head) return head;
+var flatten = function (head) {
+    if (head === null || head === undefined) return null;
+    flat(head)
+    return head;
+}
 
-    function traverse(curr) {
-        if (!curr.next && !curr.child) return curr;
+function flat(node) {
+    if (node.next === null && node.child === null) return node;
 
-        if (curr.child) {
-            const nextNode = curr.next;
-            curr.next = curr.child;
-            curr.next.prev = curr;
-            curr.child = null;
+    if (node.child) {
+        let nextHolder = node.next;
+        node.next = node.child;
+        node.next.prev = node;
+        node.child = null;
 
-            if (nextNode) {
-                const tailNode = traverse(curr.next)
-                tailNode.next = nextNode;
-                nextNode.prev = tailNode;
-            }
+        if (nextHolder) {
+            let prevHolder = flat(node.next); //child
+            prevHolder.next = nextHolder;
+            nextHolder.prev = prevHolder;
         }
-        return traverse(curr.next)
     }
 
-    traverse(head);
-    return head;
-};
+    return flat(node.next);
+}
 
 
 // Prior code

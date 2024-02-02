@@ -22,7 +22,7 @@ O(1) space
 */
 
 var isPalindrome = function(s) {
-  s = s.regex(`[A-Za-z0-9]`,'')
+  s = s.replace(/[^A-Za-z0-9]/g, '').toLowerCase()
   
   let left = 0,
       right = s.length - 1;
