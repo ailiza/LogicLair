@@ -22,6 +22,8 @@ Input: rooms = [[-1]]
 Output: [[-1]]
 */
 
+// Time: O(mn) | Space: O(mn) for q size
+
 var wallsAndGates = function (rooms) {
     const WALL = -1;
     const GATE = 0;

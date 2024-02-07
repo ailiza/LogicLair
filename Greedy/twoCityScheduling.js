@@ -22,3 +22,21 @@ const twoCitySchedCost = function (costs) {
 
   return total;
 };
+
+
+
+var twoCitySchedCost = function (costs) {
+  // Sort the costs array based on the difference between the costs of sending to City A and City B
+  costs.sort((a, b) => (a[0] - a[1]) - (b[0] - b[1]))
+
+  n = costs.length / 2
+  result = 0
+  count = 0
+
+  for (let cost of costs) {
+      result += count < n ? cost[0] : cost[1]
+      count++
+  }
+
+  return result
+};

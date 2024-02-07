@@ -32,7 +32,7 @@ var coinChange = function(coins, totalAmount) {
     for (let currAmount = 1; currAmount < totalAmount + 1; currAmount++) {
         for (const coin of coins) {
             if (currAmount - coin >= 0) {
-                const change = dp[currAmount - coin] + 1
+                const change = dp[currAmount - coin] + 1 //converts cents to #coins
                 dp[currAmount] = Math.min(dp[currAmount], change)
             }
         }

@@ -22,13 +22,13 @@ var detectCycle = function(head) {
     let slow = head;
     let fast = head;
 
-    while (fast && fast.next) {
+    while (fast && fast.next) { //find intersection with slow and fast pointers
       slow = slow.next;
       fast = fast.next.next;
 
       if (slow === fast) {
         fast = head; //moving fast to head is arbitrary, it can be slow or a new variable name
-        while (slow !== fast) {
+        while (slow !== fast) { //find starting point by moving one step in tandem for slow and fast
           slow = slow.next;
           fast = fast.next;
         }
