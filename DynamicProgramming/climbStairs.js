@@ -24,22 +24,10 @@ Explanation: There are three ways to climb to the top.
 */
 
 // Solution 1 | Memoization
-const climbStairs = function(num) {
-  let dpMap = {};
-    
-  function climb(num, dpMap) {
-    if (num === 1 || num === 2) {
-      return num;
-    }
-    if (num in dpMap) return dpMap[num];
-    return dpMap[num] = climb(num - 1, dpMap) + climb(num - 2, dpMap);
-  }
-    
-  return climb(num, dpMap);
-};
 
 
-//Recursion Solution Time: O(2^n)
+
+//Recursion Solution Time: O(2^n) --> TLE
 function climbStars(num) {
   //base case
   if (num === 1 || num === 2) return num;

@@ -26,22 +26,22 @@ Output: 3
 
 
 var rob = function(nums) {
-    if (nums.length === 0) return 0;
     const n = nums.length;
+    if (n === 0) return 0
     if (n === 1) return nums[0]
-    return Math.max(robHomes(1, n - 1), robHomes(0, n - 2))
+    return Math.max(robHomes(0, n - 2), robHomes(1, n - 1))
 
     function robHomes(start, end) {
-        const length = end - start + 1;
-        const dp = []
+        const length = end - start + 1
+        const dp = new Array(length).fill(0)
         dp[0] = 0
         dp[1] = 0
 
+        //i is for nums and j is for dp
         for (let i = 0, j = 2; i < length; i++, j++) {
-            const el = nums[start + i];
-            dp[j] = Math.max(el + dp[j - 2], dp[j - 1])
+            const el = nums[i + start]
+            dp[j] = Math.max(dp[j - 1], el + dp[j - 2])
         }
         return dp[dp.length - 1]
     }
-
-};
+}

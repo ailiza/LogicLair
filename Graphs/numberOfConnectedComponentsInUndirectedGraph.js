@@ -38,46 +38,43 @@ vertex takes O(V)O(V)O(V) space. Furthermore, storing
 the size of components also takes O(V)O(V)O(V) space.
 */
 
+
+//Time: O(v + e * ackerman(n)) | Space: O(v)
 class UnionFind {
     constructor(n) {
-        this.numOfComponents = n;
-
-        //store all parents/root of a node. the initial root is the node itself
-        this.root = [...Array(n)].map((_, i) => i);
-
-        //store all size/length/height
-        this.rank = new Array(n).fill(1);
+        this.num = n;
+        this.root = [...Array(n)].map((_, i) => i) //store parents
+        this.rank = new Array(n).fill(1) //store rank/weight/heigh
     }
 
-    findRoot(x) {
-        if (x === this.root[x]) return x;
-        //this makes all future finds easier. node the path compression doesn't
-        //change the ranks
-        return this.root[x] = this.findRoot(this.root[x]);
+    find(x) {
+        if (x === this.root[x]) return x; // because this is a parent
+        return this.root[x] = this.find(this.root[x]) //collapse so future look ups is faster
     }
 
-    merge(x, y) {
-        const rootX = this.findRoot(x);
-        const rootY = this.findRoot(y);
+    union(x, y) {
+        const parentX = this.find(x)
+        const parentY = this.find(y)
 
-        if (rootX !== rootY) {
-            this.numOfComponents--;
+        if (parentX !== parentY) {
+            this.num--;
+
+            //perform union by figuring out which rank/heigh is bigger
             if (this.rank[x] > this.rank[y]) {
-                this.root[rootY] = rootX;
-                this.rank[x]++;
+                this.root[parentY] = parentX
+                this.rank[x]++
             } else {
-                this.root[rootX] = rootY;
-                this.rank[y]++;
+                this.root[parentX] = [parentY]
+                this.rank[y]++
             }
         }
     }
 }
-
 var countComponents = function(n, edges) {
-    const uf = new UnionFind(n);
+    const uf = new UnionFind(n)
     for (const [x, y] of edges) {
-        uf.merge(x, y);
+        uf.union(x, y)
     }
 
-    return uf.numOfComponents;
+    return uf.num // number of components
 };

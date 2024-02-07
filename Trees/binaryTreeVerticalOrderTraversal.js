@@ -19,6 +19,8 @@ Input: root = [3,9,8,4,0,1,7,null,null,null,2,5]
 Output: [[4],[9,5],[3,0,1],[8,2],[7]]
 */
 
+//Time: O(n)
+
 // Using a queue and a map to keep track of the x axis (columns) and the node values
 var verticalOrder = function(root) {
     if (!root) return [];
@@ -57,3 +59,32 @@ var verticalOrder = function(root) {
 
     return result;
 };
+
+
+
+// DFS - Time: O(W * HlogH) | Space: O(n) width and heigh of a tree
+var verticalOrder = function(root) {
+    if (!root) return [];
+    
+    const columnMap = new Map();
+    dfs(root, 0, 0, columnMap);
+    
+    // Sort columns by their keys (column indices)
+    const sortedColumns = Array.from(columnMap.keys()).sort((a, b) => a - b);
+    
+    // Map sorted column indices to their values, ensuring that within each column,
+    // nodes are sorted by row, maintaining their original insertion order for nodes at the same depth.
+    const result = sortedColumns.map(col => columnMap.get(col).sort((a, b) => a.row - b.row).map(item => item.val));
+    
+    return result;
+};
+
+function dfs(node, col, row, map) {
+    if (!node) return;
+    
+    if (!map.has(col)) map.set(col, []);
+    map.get(col).push({ val: node.val, row: row });
+    
+    dfs(node.left, col - 1, row + 1, map);
+    dfs(node.right, col + 1, row + 1, map);
+}

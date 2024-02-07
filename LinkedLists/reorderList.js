@@ -46,9 +46,9 @@ function reorderList(head) {
     
     
     let c1 = head;
-    let c2 = prev;
+    let c2 = prev; // "tail"
 
-    
+    //zipper them together
     while (c1 && c2) {
         let n1 = c1.next;
         let n2 = c2.next;

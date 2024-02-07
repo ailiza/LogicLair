@@ -22,41 +22,36 @@ Explanation: The endWord "cog" is not in wordList, therefore there is no valid t
 */
 
 var ladderLength = function(beginWord, endWord, wordList) {
-    const dict = {};
-    
+    const map = new Map() // pattern: [... all the words]
     for (const word of wordList) {
         for (let i = 0; i < word.length; i++) {
-            const pattern = word.substring(0, i) + "*" + word.substring(i + 1, word.length);
-            if (!dict[pattern]) {
-                dict[pattern] = new Set();
-            } 
-            dict[pattern].add(word);
+            const pattern = makePattern(word, i)
+            if (!map.has(pattern)) map.set(pattern, new Set())
+            map.get(pattern).add(word)
         }
     }
-    
-    let step = 1;
-    let queue = [beginWord];
-    
+
+    let step = 1
+    let queue = [beginWord]
     while (queue.length) {
-        const nextGen = [];
-        
+        const nextGen = []
         for (const currWord of queue) {
-            if (currWord === endWord) return step;
-            
+            if (currWord === endWord) return step
+
             for (let i = 0; i < currWord.length; i++) {
-                const pattern = currWord.substring(0, i) + "*" + currWord.substring(i + 1, currWord.length);
-                
-                if (dict[pattern]) {
-                    nextGen.push(...dict[pattern]);
-                    delete dict[pattern];
+                const pattern = makePattern(currWord, i)
+                if (map.has(pattern)) {
+                    nextGen.push(...Array.from(map.get(pattern)))
+                    map.delete(pattern)
                 }
             }
         }
-        
-        
-        queue = nextGen;
-        step++;
+        queue = nextGen
+        step++
     }
-    
-    return 0;
-};
+    return 0
+}
+
+function makePattern(word, i) {
+    return word.slice(0, i) + "*" + word.slice(i + 1)
+}

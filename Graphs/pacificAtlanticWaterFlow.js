@@ -39,7 +39,7 @@ Explanation: The water can flow from the only cell to the Pacific and Atlantic o
 Time: O(M*N) | Space: O(M*N) where M is rows and N is columns
 */
 
-
+// DFS T: O(m * n) | S: O(m * n)
 var pacificAtlantic = function(heights) {
     function dfs(x, y, prev, ocean) {
         if (x < 0 || y < 0 || x >= ROWS || y >= COLS) return;
@@ -90,3 +90,69 @@ var pacificAtlantic = function(heights) {
 
     return result;
 };
+
+// BFS T: O(m * n) | S: O(m * n)
+
+const DIRECTIONS = [[1,0],[-1,0],[0,1],[0,-1]]
+
+var pacificAtlantic = function(heights) {
+    if (!heights.length) return 0
+    
+    let pacificQueue = []
+    let atlanticQueue = []
+    
+    let m = heights.length, 
+        n = heights[0].length
+    
+    
+    //start pacific queue with all the coordinates on the pacific borders and the same for atlantic
+    for (let x = 0; x < m; x++){
+        for (let y = 0; y < n; y++){
+            if (x === 0 || y === 0) pacificQueue.push([x,y])
+            if (x === m-1 || y === n-1) atlanticQueue.push([x,y])
+        }
+    }
+    
+    
+    let pacific = bfs(pacificQueue, heights)
+    let atlantic = bfs(atlanticQueue, heights)
+    
+    let result = []
+    
+
+    
+    for (let x = 0; x < m; x++){
+        for (let y = 0; y < n; y++){
+            if (pacific[[x,y]] && atlantic[[x,y]]) result.push([x,y])
+        }
+    }
+
+    return result
+
+};
+
+function bfs(queue, heights){
+    let visited = {}
+    
+    while (queue.length){
+        let [currentX,currentY] = queue.shift()
+        visited[[currentX,currentY]] = true
+        
+        for (let [x,y] of DIRECTIONS){
+            let newX = x + currentX
+            let newY = y + currentY
+            
+            if (newX >= 0 &&
+                newY >= 0 &&
+                newX < heights.length &&
+                newY < heights[0].length &&
+                (!visited[[newX,newY]])) {
+                    if (heights[newX][newY] >= heights[currentX][currentY]) {
+                        queue.push([newX,newY])
+                    } 
+            }
+        }
+    }
+    
+    return visited
+}

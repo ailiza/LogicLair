@@ -11,30 +11,36 @@ Input: n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]
 Output: true
 */
 
+
+class UnionFind {
+    constructor(n) {
+        this.num = n;
+        this.root = [...Array(n)].map((_,i) => i)
+    }
+
+    find(x) {
+        if (x === this.root[x]) return x
+        return this.root[x] = this.find(this.root[x])
+    }
+
+    union(x, y) {
+        const parentX = this.find(x)
+        const parentY = this.find(y)
+
+        if (parentX === parentY) return false // a true tree starts at one node so if two nodes
+        //have the same parent then you've detected a cycle and not a tree
+
+        this.root[parentY] = parentX
+        this.num--
+        return true
+    }
+
+}
+
 var validTree = function(n, edges) {
-    if (n === 0) return true;
-    
-    const adj = {};
-    for (let i = 0; i < n; i++) {
-        adj[i] = [];
+    const uf = new UnionFind(n)
+    for (const [x, y] of edges) {
+        if (uf.union(x, y) === false) return false
     }
-    for (const [n1, n2] of edges) {
-        adj[n1].push(n2);
-        adj[n2].push(n1);
-    }
-    
-    const visited = new Set();
-    
-    function dfs(i, prev) {
-        if (visited.has(i)) return false; // loop detected therefore not valid
-  
-        visited.add(i);
-        
-        for (const neighbor of adj[i]) {
-            if (neighbor === prev) continue;
-            if (!dfs(neighbor, i)) return false; // loop detected therefore not valid
-        }
-        return true; // no loop detected
-    }
-    return dfs(0, -1) && n === visited.size;
-  };
+    return uf.num === 1
+};
