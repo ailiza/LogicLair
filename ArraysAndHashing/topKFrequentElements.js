@@ -1,5 +1,6 @@
 /** 
 Leetcode 347
+https://leetcode.com/problems/top-k-frequent-elements/description/
 Top K Frequent Elements
 
 Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
@@ -25,6 +26,20 @@ What else could we do?
 -suggested a simple insertion sort on the basis that, for large streams, you are unlikely to encounter many candidates for the top-k position. This would probably work well for very long streams, but it could degenerate badly in some cases.
 - refered to a fancier approach used by Google Guava: maintain a buffer of 2k elements initially empty. Fill it up. Once it is full, use QuickSelect on it and discard half of it. Rinse and repeat. This seems like an appealing idea and Michel testifies that it provides very good practical performance.
 */
+
+// Time: O(N log k) | Space: O(k)
+var kClosest = function (points, k) {
+    const heap = new MaxPriorityQueue({ priority: ([x, y]) => ((x * x) + (y * y)) });
+
+    for (const p of points) {
+        heap.enqueue(p)
+        if (heap.size() > k) {
+            heap.dequeue();
+        }
+    }
+    
+    return heap.toArray().map(el => el.element)
+};
 
 
 // Total time : O(n + mlog(k) + k) | Space : O(m)
